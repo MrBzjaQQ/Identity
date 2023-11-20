@@ -1,0 +1,6 @@
+@Identity.Portal.Web_HostAddress = http://localhost:5198
+
+GET {{Identity.Portal.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
