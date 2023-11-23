@@ -1,0 +1,6 @@
+@Identity.TokenIssuer.Web_HostAddress = http://localhost:5126
+
+GET {{Identity.TokenIssuer.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
