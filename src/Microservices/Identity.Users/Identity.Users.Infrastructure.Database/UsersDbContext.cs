@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Users.Infrastructure.Database;
-public sealed class IdentityDbContext: IdentityDbContext<User>, IIdentityDbContext
+public sealed class UsersDbContext: IdentityDbContext<User>, IUsersDbContext
 {
-    public IdentityDbContext(DbContextOptions<IdentityDbContext> options)
+    public UsersDbContext(DbContextOptions<UsersDbContext> options)
         : base(options)
     {
         

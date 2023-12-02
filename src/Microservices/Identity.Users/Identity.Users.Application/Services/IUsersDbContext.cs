@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Users.Application.Services;
-public interface IIdentityDbContext
+public interface IUsersDbContext
 {
     public DbSet<User> Users { get; }
     public DbSet<IdentityRole> Roles { get; }

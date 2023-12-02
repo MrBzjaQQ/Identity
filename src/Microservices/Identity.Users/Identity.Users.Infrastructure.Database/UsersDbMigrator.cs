@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Users.Infrastructure.Database;
-public sealed class IdentityDbMigrator: IIdentityDbMigrator
+public sealed class UsersDbMigrator: IUsersDbMigrator
 {
-    private readonly IdentityDbContext _context;
+    private readonly UsersDbContext _context;
 
-    public IdentityDbMigrator(IdentityDbContext context)
+    public UsersDbMigrator(UsersDbContext context)
     {
         _context = context;
     }
@@ -16,9 +16,10 @@ public sealed class IdentityDbMigrator: IIdentityDbMigrator
         await _context.Database.MigrateAsync();
     }
 
-    public async Task SeedDataAsync()
+    public Task SeedDataAsync()
     {
         // TODO - Seed Data
+        return Task.CompletedTask;
     }
 
     public async Task EnsureDatabaseDeletedAsync()

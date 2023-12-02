@@ -16,12 +16,12 @@ public static class DependencyInjection
             throw new ArgumentNullException(nameof(databaseSettings.ConnectionString));
         }
 
-        serviceCollection.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(databaseSettings.ConnectionString));
-        serviceCollection.AddScoped<IIdentityDbContext>(provider => provider.GetRequiredService<IdentityDbContext>());
-        serviceCollection.AddTransient<IIdentityDbMigrator, IdentityDbMigrator>();
+        serviceCollection.AddDbContext<UsersDbContext>(options => options.UseNpgsql(databaseSettings.ConnectionString));
+        serviceCollection.AddScoped<IUsersDbContext>(provider => provider.GetRequiredService<UsersDbContext>());
+        serviceCollection.AddTransient<IUsersDbMigrator, UsersDbMigrator>();
         serviceCollection.AddIdentityCore<User>(options => {
             options.SignIn.RequireConfirmedAccount = true;
-        }).AddEntityFrameworkStores<IdentityDbContext>();
+        }).AddEntityFrameworkStores<UsersDbContext>();
 
         // TODO - move to appsettings (?)
         serviceCollection.Configure<IdentityOptions>(options =>
@@ -51,7 +51,7 @@ public static class DependencyInjection
     public static async Task<IHost> MigrateDatabase(this IHost host)
     {
         using var scope = host.Services.CreateScope();
-        var identityDbMigrator = scope.ServiceProvider.GetRequiredService<IIdentityDbMigrator>();
+        var identityDbMigrator = scope.ServiceProvider.GetRequiredService<IUsersDbMigrator>();
         await identityDbMigrator.MigrateAsync();
         await identityDbMigrator.SeedDataAsync();
         return host;
