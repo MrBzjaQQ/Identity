@@ -1,21 +1,10 @@
 ﻿using FluentAssertions;
-using Identity.Users.Application.Services.Users.Port;
 using Identity.Users.Application.Services.Users.Port.Contract.CreateUser;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Application.Tests.Services.Users;
 public class CreateUserTests: TestFixtureBase
 {
-    private IUsersService _usersService;
-
-    [OneTimeSetUp]
-    public override void SetUp()
-    {
-        base.SetUp();
-        _usersService = ServiceProvider.GetRequiredService<IUsersService>();
-    }
-
     [Test]
     public async Task ShouldCreateUser()
     {
@@ -30,7 +19,7 @@ public class CreateUserTests: TestFixtureBase
         };
 
         // Act
-        var result = await _usersService.CreateUserAsync(request);
+        var result = await UsersService.CreateUserAsync(request);
 
         // Assert
         NewScope();

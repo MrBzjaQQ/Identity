@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Users.Infrastructu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Users.Infrastructure.Database", "Identity.Users.Infrastructure.Database\Identity.Users.Infrastructure.Database.csproj", "{920D0ABE-6B2D-44E1-909A-46553DA681C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Application.Tests", "Identity.Application.Tests\Identity.Application.Tests.csproj", "{9EC8B300-8B82-4F32-AB76-A657469AB8F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Application.IntegrationTests", "Identity.Application.Tests\Identity.Application.IntegrationTests.csproj", "{9EC8B300-8B82-4F32-AB76-A657469AB8F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

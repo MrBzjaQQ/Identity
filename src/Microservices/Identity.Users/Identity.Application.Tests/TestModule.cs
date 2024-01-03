@@ -1,31 +1,46 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Testcontainers.PostgreSql;
 
 namespace Identity.Application.Tests;
 public class TestModule
 {
-    public IServiceProvider ServiceProvider { get; }
     private static TestModule? _current;
+    private PostgreSqlContainer? _dbContainer;
+    private const string DbContainerIsNotCreated = "PostgreSQL container is not created";
+
     public static TestModule Current = _current ??= new TestModule();
 
-    public TestModule()
+    public void SetDbContainer(PostgreSqlContainer container)
     {
-        var builder = WebApplication
-            .CreateBuilder()
-            .BuildTestApplication();
-
-        ServiceProvider = builder.Build().Services;
+        _dbContainer = container;
     }
 
-    public async Task RunInScopeAsync(Func<IServiceProvider, Task> action)
+    public async Task StartDbContainerAsync()
     {
-        await using var scope = ServiceProvider.CreateAsyncScope();
-        await action(scope.ServiceProvider);
+        if (_dbContainer == null)
+        {
+            throw new InvalidOperationException(DbContainerIsNotCreated);
+        }
+
+        await _dbContainer.StartAsync();
     }
 
-    public void RunInScope(Action<IServiceProvider> action)
+    public async Task StopDbContainerAsync()
     {
-        using var scope = ServiceProvider.CreateScope();
-        action(scope.ServiceProvider);
+        if (_dbContainer == null)
+        {
+            throw new InvalidOperationException(DbContainerIsNotCreated);
+        }
+
+        await _dbContainer.StopAsync();
+    }
+
+    public string GetDbConnectionString()
+    {
+        if (_dbContainer == null)
+        {
+            throw new InvalidOperationException(DbContainerIsNotCreated);
+        }
+
+        return _dbContainer.GetConnectionString();
     }
 }

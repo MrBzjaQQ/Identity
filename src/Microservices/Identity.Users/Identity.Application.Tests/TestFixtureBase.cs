@@ -1,31 +1,59 @@
 ﻿using Identity.Users.Application.Services;
+using Identity.Users.Application.Services.Users.Port;
 using Identity.Users.Infrastructure.Database;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Application.Tests;
 public abstract class TestFixtureBase
 {
-    private IServiceScope _testRunScope = null!;
-    protected IServiceProvider ServiceProvider => _testRunScope.ServiceProvider;
+    private IServiceScope? _testRunScope = null;
+    private ServiceProvider _serviceProvider = null!;
+    protected IServiceProvider ServiceProvider => _serviceProvider;
     protected IUsersDbContext UsersDbContext => ServiceProvider.GetRequiredService<IUsersDbContext>();
+    protected IUsersService UsersService => ServiceProvider.GetRequiredService<IUsersService>();
 
     [SetUp]
-    public virtual void SetUp()
+    public virtual async Task SetUp()
     {
-        _testRunScope = TestModule.Current.ServiceProvider.CreateScope();
-
         // Reset data
-        ClearDatabase();
+        _serviceProvider = BuildServiceProvider();
+        _testRunScope = _serviceProvider.CreateScope();
+        await ClearDatabase();
     }
 
     [TearDown]
-    public void TearDown()
+    public async Task TearDown()
     {
-        _testRunScope.Dispose();
+        _testRunScope?.Dispose();
+        _testRunScope = null;
+        await _serviceProvider.DisposeAsync();
+        _serviceProvider = null!;
     }
 
-    private void ClearDatabase()
+
+    protected virtual void NewScope()
+    {
+        _serviceProvider.DisposeAsync().AsTask().GetAwaiter().GetResult();
+        _serviceProvider = BuildServiceProvider();
+    }
+
+    protected ServiceProvider BuildServiceProvider()
+    {
+        var databaseSettings = new DatabaseSettings()
+        {
+            ConnectionString = TestModule.Current.GetDbConnectionString()
+        };
+
+        var testApplicationBuilder = WebApplication
+            .CreateBuilder()
+            .BuildTestApplication(databaseSettings);
+
+        return testApplicationBuilder.Services.BuildServiceProvider();
+    }
+
+    private async Task ClearDatabase()
     {
         var db = ServiceProvider.GetRequiredService<UsersDbContext>();
         var tableNames = db.Model.GetEntityTypes()
@@ -35,14 +63,8 @@ public abstract class TestFixtureBase
         foreach (var tableName in tableNames)
         {
 #pragma warning disable EF1002 // SQL Injection is not possible due to project of application tests
-            db.Database.ExecuteSqlRaw($"DELETE FROM \"{tableName}\";");
+            await db.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\";");
 #pragma warning restore EF1002 // SQL Injection is not possible due to project of application tests
         }
-    }
-
-    protected void NewScope()
-    {
-        _testRunScope.Dispose();
-        _testRunScope = TestModule.Current.ServiceProvider.CreateScope();
     }
 }
