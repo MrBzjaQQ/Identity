@@ -43,4 +43,23 @@ public class CreateUserTests: TestFixtureBase
         user!.UserName.Should().Be(request.UserName);
         user!.PasswordHash.Should().NotBeEmpty();
     }
+
+    //[Test]
+    //public async Task CreateUser__PasswordsNotMatch__ShouldThrowBadRequest()
+    //{
+    //    // Arrange
+    //    var request = new CreateUserRequest
+    //    {
+    //        Email = "test@example.com",
+    //        Password = "Pa55w0rd!",
+    //        PasswordConfirm = "Pa55w0rd!!",
+    //        PhoneNumber = "+1234567890",
+    //        UserName = "TestUser1"
+    //    };
+
+    //    var shouldThrow = () => _usersService.CreateUserAsync(request);
+
+    //    // Act & Assert
+    //    await shouldThrow.Should().ThrowAsync<>();
+    //}
 }
