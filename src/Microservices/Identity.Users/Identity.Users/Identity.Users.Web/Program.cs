@@ -1,4 +1,6 @@
+using Identity.Users.Application;
 using Identity.Users.Infrastructure.Database;
+using Identity.Users.Resources.Constants;
 using Identity.Users.Web.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,7 @@ builder.Services.AddSwaggerGen();
 
 var applicationSettings = builder.Configuration.Get<WebAppSettings>();
 builder.Services.AddDatabase(applicationSettings?.DatabaseSettings);
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
@@ -30,4 +33,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.Logger.LogInformation(ApplicationStartup.ApplicationStarted);
 app.Run();

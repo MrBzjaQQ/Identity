@@ -1,0 +1,1 @@
+I've added another folder level for solution because of conflict between Visual Studio and Docker in .vs folder while running API tests. Docker locks whole folder while Visual Studio tries to access .vs subfolder.
