@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 
 var applicationSettings = builder.Configuration.Get<WebAppSettings>();
 builder.Services.AddDatabase(applicationSettings?.DatabaseSettings);
+builder.Services.AddValidation();
 builder.Services.AddApplicationServices();
 
 var app = builder.Build();

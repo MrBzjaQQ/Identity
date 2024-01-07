@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Identity.Users.Application.Services.Users.Port.Contract.CreateUser;
+using Identity.Users.Resources;
 using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Application.Tests.Services.Users;
@@ -33,22 +34,24 @@ public class CreateUserTests: TestFixtureBase
         user!.PasswordHash.Should().NotBeEmpty();
     }
 
-    //[Test]
-    //public async Task CreateUser__PasswordsNotMatch__ShouldThrowBadRequest()
-    //{
-    //    // Arrange
-    //    var request = new CreateUserRequest
-    //    {
-    //        Email = "test@example.com",
-    //        Password = "Pa55w0rd!",
-    //        PasswordConfirm = "Pa55w0rd!!",
-    //        PhoneNumber = "+1234567890",
-    //        UserName = "TestUser1"
-    //    };
+    [Test]
+    public async Task CreateUser__UserAlreadyExists__ShouldThrowBadRequest()
+    {
+        // Arrange
+        var request = new CreateUserRequest
+        {
+            Email = "test@example.com",
+            Password = "Pa55w0rd!",
+            PasswordConfirm = "Pa55w0rd!",
+            PhoneNumber = "+1234567890",
+            UserName = "TestUser1"
+        };
 
-    //    var shouldThrow = () => _usersService.CreateUserAsync(request);
+        await UsersService.CreateUserAsync(request);
+        var shouldThrow = () => UsersService.CreateUserAsync(request);
 
-    //    // Act & Assert
-    //    await shouldThrow.Should().ThrowAsync<>();
-    //}
+        // Act & Assert
+        var exceptionAssert = await shouldThrow.Should().ThrowAsync<HttpRequestException>();
+        exceptionAssert.WithMessage(ErrorMessages.UserWithEmailAlreadyExists);
+    }
 }

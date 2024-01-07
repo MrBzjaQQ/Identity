@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Identity.Users.Application.Services.Users.Port.Contract.CreateUser;
 using NUnit.Framework;
+using Refit;
 
 namespace Identity.Users.ApiTests.Controllers.Users;
 
@@ -30,5 +31,16 @@ public class CreateUsersTests: TestFixtureBase
         }, config => config.Excluding(response => response.UserId));
 
         response.UserId.Should().NotBeNull().And.NotBeEmpty();
+    }
+
+    [Test]
+    public async Task ShouldThrowIfRequestInvalid()
+    {
+        // Arrange
+        var request = new CreateUserRequest();
+        var shouldThrow = () => UsersService.CreateUser(request);
+
+        // Act & Assert
+        await shouldThrow.Should().ThrowAsync<ValidationApiException>();
     }
 }

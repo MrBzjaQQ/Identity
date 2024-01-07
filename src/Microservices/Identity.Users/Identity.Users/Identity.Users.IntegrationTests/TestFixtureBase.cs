@@ -17,7 +17,6 @@ public abstract class TestFixtureBase
     [SetUp]
     public virtual async Task SetUp()
     {
-        // Reset data
         _serviceProvider = BuildServiceProvider();
         _testRunScope = _serviceProvider.CreateScope();
         await ClearDatabase();
