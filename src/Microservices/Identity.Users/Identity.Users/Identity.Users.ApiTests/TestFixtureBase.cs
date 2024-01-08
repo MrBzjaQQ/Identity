@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using System.Net;
 using Testcontainers.PostgreSql;
 
 namespace Identity.Users.ApiTests;
@@ -53,9 +54,8 @@ public abstract class TestFixtureBase
 
         _serviceProvider = BuildServiceProvider(
             hostname: _appContainer.Hostname,
-            // TODO {i.ershov} - add certificate to the docker image to enable tests with https
-            port: _appContainer.GetMappedPublicPort(8080),
-            scheme: Uri.UriSchemeHttp);
+            port: _appContainer.GetMappedPublicPort(8081),
+            scheme: Uri.UriSchemeHttps);
         _usersService = _serviceProvider.GetRequiredService<IUsersEndpointsService>();
     }
 
@@ -111,15 +111,19 @@ public abstract class TestFixtureBase
             .DependsOn(dbContainer)
             .WithWaitStrategy(Wait
                 .ForUnixContainer()
-                .UntilMessageIsLogged(ApplicationStartup.ApplicationStarted))
-            .WithPortBinding(8080)
-            .WithPortBinding(8081)
-            .WithName(ApplicationContainerName);
+                .UntilMessageIsLogged(ApplicationStartup.ApplicationStarted)
+                .UntilPortIsAvailable(8080)
+                .UntilPortIsAvailable(8081))
+            .WithPortBinding(8080, 8080)
+            .WithPortBinding(8081, 8081)
+            .WithName(ApplicationContainerName)
+            .WithEnvironment("Kestrel__Certificates__Default__Path", "/usr/local/share/ca-certificates/apitests_CA.pfx")
+            .WithEnvironment("Kestrel__Certificates__Default__Password", "Pa55w0rd!");
 
         return containerBuilder.Build();
     }
 
-    private static ServiceProvider BuildServiceProvider(string hostname, int port, string scheme = "https")
+    private static ServiceProvider BuildServiceProvider(string hostname, int port, string scheme)
     {
         var applicationEndpoint = new UriBuilder()
         {

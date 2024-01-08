@@ -2,8 +2,13 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+ENV ASPNETCORE_HTTPS_PORT=8081
+ENV ASPNETCORE_HTTP_PORT=8080
+ENV ASPNETCORE_URLS=http://*:8080;https://*:8081
+
+COPY /dev-certificates/*.crt /usr/local/share/ca-certificates/
+COPY /dev-certificates/*.pfx /usr/local/share/ca-certificates/
+RUN update-ca-certificates
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release

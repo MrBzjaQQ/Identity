@@ -6,6 +6,7 @@ using Identity.Users.ApiTests.Services;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using DateOnlyTimeOnly.AspNet.Converters;
+using System.Net.Security;
 
 namespace Identity.Users.ApiTests;
 
@@ -44,10 +45,22 @@ public static class DependencyInjection
 
         services
             .AddRefitClient<IUsersEndpointsService>(settings)
-            .ConfigureHttpClient(configure =>
+            .ConfigureHttpClient(client =>
             {
-                configure.BaseAddress = new Uri(applicationEndpoint);
-                configure.Timeout = TimeSpan.FromSeconds(180);
+                client.BaseAddress = new Uri(applicationEndpoint);
+                client.Timeout = TimeSpan.FromSeconds(180);
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
+            {
+                SslProtocols = System.Security.Authentication.SslProtocols.Tls13,
+                // TODO: {i.ershov} disabled RemoteCertificateNameMismatch since I have an error: The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch
+                // Will be fixed when I figure out how to.
+                ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) =>
+                {
+                    return errors == SslPolicyErrors.None 
+                        || (errors != SslPolicyErrors.RemoteCertificateNotAvailable 
+                        && errors != SslPolicyErrors.RemoteCertificateChainErrors);
+                }
             });
 
         return services;
