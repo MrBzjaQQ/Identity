@@ -1,6 +1,6 @@
 ﻿using Testcontainers.PostgreSql;
 
-namespace Identity.Application.Tests;
+namespace Identity.Users.IntegrationTests;
 public class TestModule
 {
     private static TestModule? _current;

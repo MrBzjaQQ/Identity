@@ -1,6 +1,7 @@
 using Identity.Users.Application;
 using Identity.Users.Infrastructure.Database;
 using Identity.Users.Resources.Constants;
+using Identity.Users.Web.Middleware;
 using Identity.Users.Web.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,5 +35,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.Logger.LogInformation(ApplicationStartup.ApplicationStarted);
 app.Run();

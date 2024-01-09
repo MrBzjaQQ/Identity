@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Identity.Application.Tests;
+namespace Identity.Users.IntegrationTests;
 public abstract class TestFixtureBase
 {
     private IServiceScope? _testRunScope = null;
@@ -30,7 +30,6 @@ public abstract class TestFixtureBase
         await _serviceProvider.DisposeAsync();
         _serviceProvider = null!;
     }
-
 
     protected virtual void NewScope()
     {

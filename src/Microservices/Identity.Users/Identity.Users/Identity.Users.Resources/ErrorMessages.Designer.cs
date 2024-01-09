@@ -97,6 +97,15 @@ namespace Identity.Users.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User {0} is not found.
+        /// </summary>
+        public static string UserNotFoundTemplate {
+            get {
+                return ResourceManager.GetString("UserNotFoundTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User with this email already exists.
         /// </summary>
         public static string UserWithEmailAlreadyExists {

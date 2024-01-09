@@ -17,5 +17,12 @@ public interface IUserManagerProxy
     /// <summary>
     /// Gets user by specified email
     /// </summary>
-    Task<User?> GetUserByEmail(string email);
+    Task<User?> FindByEmailAsync(string email);
+
+    /// <summary>
+    /// Finds user by it's ID
+    /// </summary>
+    /// <param name="id">User ID</param>
+    /// <returns>User entity</returns>
+    Task<User?> FindByIdAsync(string id);
 }

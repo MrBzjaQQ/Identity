@@ -1,13 +1,13 @@
 ﻿using DotNet.Testcontainers.Builders;
-using Identity.Application.Tests.Settings;
 using Identity.Users.Application.Services;
 using Identity.Users.Infrastructure.Database;
+using Identity.Users.IntegrationTests.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.PostgreSql;
 
-namespace Identity.Application.Tests;
+namespace Identity.Users.IntegrationTests;
 
 [SetUpFixture]
 public class SetUpTests
@@ -59,7 +59,9 @@ public class SetUpTests
             .WithUsername(containerSettings.Username)
             .WithPassword(containerSettings.Password)
             .WithPortBinding(PostgreSqlBuilder.PostgreSqlPort, assignRandomHostPort: true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(ContainerStartedLog));
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilMessageIsLogged(ContainerStartedLog)
+                .UntilPortIsAvailable(5432));
 
         return postgreSqlBuilder.Build();
     }

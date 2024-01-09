@@ -23,8 +23,13 @@ public sealed class UserManagerProxy: IUserManagerProxy
         return result is not null;
     }
 
-    public async Task<User?> GetUserByEmail(string email)
+    public async Task<User?> FindByEmailAsync(string email)
     {
         return await _userManager.FindByEmailAsync(email);
+    }
+
+    public async Task<User?> FindByIdAsync(string id)
+    {
+        return await _userManager.FindByIdAsync(id);
     }
 }

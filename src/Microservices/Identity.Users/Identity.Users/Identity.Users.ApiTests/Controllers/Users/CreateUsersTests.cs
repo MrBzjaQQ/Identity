@@ -21,7 +21,7 @@ public class CreateUsersTests: TestFixtureBase
         };
 
         // Act
-        var response = await UsersService.CreateUser(request);
+        var response = await UsersService.CreateUserAsync(request);
 
         // Assert
         response.Should().BeEquivalentTo(new CreateUserResponse()
@@ -38,7 +38,7 @@ public class CreateUsersTests: TestFixtureBase
     {
         // Arrange
         var request = new CreateUserRequest();
-        var shouldThrow = () => UsersService.CreateUser(request);
+        var shouldThrow = () => UsersService.CreateUserAsync(request);
 
         // Act & Assert
         await shouldThrow.Should().ThrowAsync<ValidationApiException>();

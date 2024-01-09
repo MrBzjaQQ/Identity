@@ -1,4 +1,4 @@
-﻿namespace Identity.Application.Tests.Settings;
+﻿namespace Identity.Users.IntegrationTests.Settings;
 public sealed record TestApplicationSettings
 {
     /// <summary>

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using System.Net;
 using Testcontainers.PostgreSql;
 
 namespace Identity.Users.ApiTests;
@@ -99,7 +98,9 @@ public abstract class TestFixtureBase
             .WithPassword(containerSettings.Password)
             .WithPortBinding(PostgreSqlBuilder.PostgreSqlPort, assignRandomHostPort: false)
             .WithName(DbContainerName)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(ContainerStartedLog));
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilMessageIsLogged(ContainerStartedLog)
+                .UntilPortIsAvailable(5432));
 
         return postgreSqlBuilder.Build();
     }

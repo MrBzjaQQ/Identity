@@ -129,6 +129,9 @@
   <data name="UserNameCannotBeEmpty" xml:space="preserve">
     <value>User name cannot be empty</value>
   </data>
+  <data name="UserNotFoundTemplate" xml:space="preserve">
+    <value>User {0} is not found</value>
+  </data>
   <data name="UserWithEmailAlreadyExists" xml:space="preserve">
     <value>User with this email already exists</value>
   </data>

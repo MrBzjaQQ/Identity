@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
+using Identity.Users.Application.Exceptions;
 using Identity.Users.Application.Services.Users.Port.Contract.CreateUser;
 using Identity.Users.Resources;
 using Microsoft.EntityFrameworkCore;
 
-namespace Identity.Application.Tests.Services.Users;
-public class CreateUserTests: TestFixtureBase
+namespace Identity.Users.IntegrationTests.Services.Users;
+public class CreateUserTests : TestFixtureBase
 {
     [Test]
     public async Task ShouldCreateUser()
@@ -51,7 +52,7 @@ public class CreateUserTests: TestFixtureBase
         var shouldThrow = () => UsersService.CreateUserAsync(request);
 
         // Act & Assert
-        var exceptionAssert = await shouldThrow.Should().ThrowAsync<HttpRequestException>();
+        var exceptionAssert = await shouldThrow.Should().ThrowAsync<BadRequestException>();
         exceptionAssert.WithMessage(ErrorMessages.UserWithEmailAlreadyExists);
     }
 }

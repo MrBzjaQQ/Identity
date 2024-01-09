@@ -2,7 +2,7 @@
 using Identity.Users.Infrastructure.Database;
 using Microsoft.AspNetCore.Builder;
 
-namespace Identity.Application.Tests;
+namespace Identity.Users.IntegrationTests;
 public static class DependencyInjection
 {
     public static WebApplicationBuilder BuildTestApplication(this WebApplicationBuilder builder, DatabaseSettings databaseSettings)
