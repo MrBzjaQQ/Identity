@@ -8,6 +8,6 @@ public interface IUsersEndpointsService
     [Post("/api/Users/createUser")]
     Task<CreateUserResponse> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken = default);
 
-    [Get("/api/Users/getById/{id}")]
+    [Get("/api/Users/{id}")]
     Task<GetUserDetailsResponse> GetByIdAsync(string id, CancellationToken cancellationToken = default);
 }

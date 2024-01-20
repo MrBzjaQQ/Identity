@@ -4,7 +4,7 @@ using Identity.Users.Domain.Entities;
 namespace Identity.Users.Application.Services.Users.Mappers.Users;
 public static class GetUserDetailsMappings
 {
-    public static GetUserDetailsResponse ToSchemaResponse(this User user)
+    public static GetUserDetailsResponse ToSchemaDetails(this User user)
     {
         return new GetUserDetailsResponse()
         {

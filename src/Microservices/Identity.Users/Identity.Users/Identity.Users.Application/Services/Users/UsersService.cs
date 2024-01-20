@@ -1,9 +1,13 @@
 ﻿using Identity.Users.Application.Exceptions;
+using Identity.Users.Application.Services.Shared.Port.Contact;
 using Identity.Users.Application.Services.Users.Mappers.Users;
 using Identity.Users.Application.Services.Users.Port;
 using Identity.Users.Application.Services.Users.Port.Contract.CreateUser;
+using Identity.Users.Application.Services.Users.Port.Contract.GetList;
 using Identity.Users.Application.Services.Users.Port.Contract.GetUserDetails;
+using Identity.Users.Domain.Entities;
 using Identity.Users.Resources;
+using LinqSpecs;
 
 namespace Identity.Users.Application.Services.Users;
 public sealed class UsersService: IUsersService
@@ -31,6 +35,21 @@ public sealed class UsersService: IUsersService
     {
         var user = await _userManagerProxy.FindByIdAsync(id);
         EntityNotFoundException.ThrowIfNull(user, string.Format(ErrorMessages.UserNotFoundTemplate, id));
-        return user.ToSchemaResponse();
+        return user.ToSchemaDetails();
+    }
+
+    public async Task<PagedListResponse<UserListItem>> GetList(GetUsersListRequest request, CancellationToken cancellationToken)
+    {
+        var filter = new AdHocSpecification<User>(f => f.LockoutEnd.HasValue);
+        var users = await _userManagerProxy.GetList(
+            take: request.Take,
+            skip: request.Skip,
+            cancellationToken);
+
+        return new()
+        {
+            TotalCount = await _userManagerProxy.Count(cancellationToken),
+            Items = users
+        };
     }
 }
