@@ -21,7 +21,7 @@ public sealed class UsersService: IUsersService
 
     public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequest request)
     {
-        if (await _userManagerProxy.IsUserExists(request.Email))
+        if (await _userManagerProxy.IsUserExistsAsync(request.Email))
         {
             throw new BadRequestException(ErrorMessages.UserWithEmailAlreadyExists);
         }
@@ -38,18 +38,25 @@ public sealed class UsersService: IUsersService
         return user.ToSchemaDetails();
     }
 
-    public async Task<PagedListResponse<UserListItem>> GetList(GetUsersListRequest request, CancellationToken cancellationToken)
+    public async Task<PagedListResponse<UserListItem>> GetListAsync(GetUsersListRequest request, CancellationToken cancellationToken)
     {
         var filter = new AdHocSpecification<User>(f => f.LockoutEnd.HasValue);
-        var users = await _userManagerProxy.GetList(
+        var users = await _userManagerProxy.GetListAsync(
             take: request.Take,
             skip: request.Skip,
             cancellationToken);
 
         return new()
         {
-            TotalCount = await _userManagerProxy.Count(cancellationToken),
+            TotalCount = await _userManagerProxy.CountAsync(cancellationToken),
             Items = users
         };
+    }
+
+    public async Task DeleteUserAsync(string id, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManagerProxy.FindByIdAsync(id);
+        EntityNotFoundException.ThrowIfNull(user, ErrorMessages.UserNotFoundTemplate);
+        await _userManagerProxy.DeleteAsync(user);
     }
 }

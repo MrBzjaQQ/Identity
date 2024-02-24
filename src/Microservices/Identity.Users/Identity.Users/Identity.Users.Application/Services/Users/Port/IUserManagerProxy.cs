@@ -14,7 +14,7 @@ public interface IUserManagerProxy
     /// <summary>
     /// Checks if user exists
     /// </summary>
-    Task<bool> IsUserExists(string email);
+    Task<bool> IsUserExistsAsync(string email);
 
     /// <summary>
     /// Gets user by specified email
@@ -34,7 +34,7 @@ public interface IUserManagerProxy
     /// <param name="take">Amount to take</param>
     /// <param name="skip">Amount to skip</param>
     /// <param name="cancellationToken">Operation cancellation token</param>
-    Task<IList<UserListItem>> GetList(
+    Task<IList<UserListItem>> GetListAsync(
         int take = int.MaxValue,
         int skip = 0,
         CancellationToken cancellationToken = default);
@@ -46,7 +46,7 @@ public interface IUserManagerProxy
     /// <param name="take">Amount to take</param>
     /// <param name="skip">Amount to skip</param>
     /// <param name="cancellationToken">Operation cancellation token</param>
-    Task<IList<UserListItem>> GetList(
+    Task<IList<UserListItem>> GetListAsync(
         AdHocSpecification<User> filter,
         int take = int.MaxValue,
         int skip = 0,
@@ -56,14 +56,20 @@ public interface IUserManagerProxy
     /// Counts users
     /// </summary>
     /// <param name="cancellationToken">Operation cancellation token</param>
-    Task<long> Count(CancellationToken cancellationToken = default);
+    Task<long> CountAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Counts users by filter
     /// </summary>
     /// <param name="filter">Filtering expression</param>
     /// <param name="cancellationToken">Operation cancellation token</param>
-    Task<long> Count(
+    Task<long> CountAsync(
         AdHocSpecification<User> filter,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes user
+    /// </summary>
+    /// <param name="user">User</param>
+    Task DeleteAsync(User user);
 }

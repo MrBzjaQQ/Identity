@@ -1,4 +1,5 @@
-﻿using Identity.Users.Application.Services.Users.Port;
+﻿using Identity.Users.Application.Exceptions;
+using Identity.Users.Application.Services.Users.Port;
 using Identity.Users.Application.Services.Users.Port.Contract.GetList;
 using Identity.Users.Domain.Entities;
 using LinqSpecs;
@@ -20,7 +21,7 @@ public sealed class UserManagerProxy: IUserManagerProxy
         return await _userManager.CreateAsync(user, password);
     }
 
-    public async Task<bool> IsUserExists(string email)
+    public async Task<bool> IsUserExistsAsync(string email)
     {
         var result = await _userManager.FindByEmailAsync(email);
         return result is not null;
@@ -36,7 +37,7 @@ public sealed class UserManagerProxy: IUserManagerProxy
         return await _userManager.FindByIdAsync(id);
     }
 
-    public async Task<IList<UserListItem>> GetList(
+    public async Task<IList<UserListItem>> GetListAsync(
         int take = int.MaxValue,
         int skip = 0,
         CancellationToken cancellationToken = default)
@@ -44,7 +45,7 @@ public sealed class UserManagerProxy: IUserManagerProxy
         return await GetList(_userManager.Users, take, skip, cancellationToken);
     }
 
-    public async Task<IList<UserListItem>> GetList(
+    public async Task<IList<UserListItem>> GetListAsync(
         AdHocSpecification<User> filter,
         int take = int.MaxValue,
         int skip = 0,
@@ -73,17 +74,22 @@ public sealed class UserManagerProxy: IUserManagerProxy
             }).ToListAsync(cancellationToken);
     }
 
-    public async Task<long> Count(CancellationToken cancellationToken = default)
+    public async Task<long> CountAsync(CancellationToken cancellationToken = default)
     {
         return await _userManager.Users.CountAsync(cancellationToken);
     }
 
-    public async Task<long> Count(
+    public async Task<long> CountAsync(
         AdHocSpecification<User> filter,
         CancellationToken cancellationToken = default)
     {
         return await _userManager.Users
             .Where(filter)
             .CountAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(User user)
+    {
+        await _userManager.DeleteAsync(user);
     }
 }

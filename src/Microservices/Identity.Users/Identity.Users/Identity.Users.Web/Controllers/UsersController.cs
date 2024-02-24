@@ -32,6 +32,12 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<PagedListResponse<UserListItem>> GetList(GetUsersListRequest request)
     {
-        return await _usersService.GetList(request, HttpContext.RequestAborted);
+        return await _usersService.GetListAsync(request, HttpContext.RequestAborted);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task DeleteUser(string id)
+    {
+        await _usersService.DeleteUserAsync(id, HttpContext.RequestAborted);
     }
 }

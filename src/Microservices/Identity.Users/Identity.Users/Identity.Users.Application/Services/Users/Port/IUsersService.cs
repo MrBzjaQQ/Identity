@@ -25,5 +25,12 @@ public interface IUsersService
     /// </summary>
     /// <param name="request">Users list filter</param>
     /// <returns>List of users</returns>
-    Task<PagedListResponse<UserListItem>> GetList(GetUsersListRequest request, CancellationToken cancellationToken = default);
+    Task<PagedListResponse<UserListItem>> GetListAsync(GetUsersListRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes user
+    /// </summary>
+    /// <param name="id">User Id</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    Task DeleteUserAsync(string id, CancellationToken cancellationToken = default);
 }
